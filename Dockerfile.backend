@@ -1,4 +1,5 @@
 FROM python:3.11-slim
+RUN echo "hello backend"
 WORKDIR /app
 COPY backend/ .
 RUN pip install -r requirements.txt
