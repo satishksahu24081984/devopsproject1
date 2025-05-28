@@ -1,7 +1,7 @@
 pipeline {
   agent any
   triggers {
-    githubPush()
+    pollSCM('* * * * *')  // Check for changes every minute
   }
   stages {
     stage('Clone') {
@@ -11,10 +11,8 @@ pipeline {
     }
     stage('Test Trigger') {
       steps {
-                echo 'Build Triggered from GitHub Push! now webhook successfully done pleae push this message'
-
+        echo 'Triggered by polling GitHub repo!'
       }
     }
   }
 }
-
