@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Print Message') {
       steps {
-        echo 'Build Triggered from GitHub Push!'
+        echo 'Build Triggered from GitHub Push! now webhook successfully done'
       }
     }
   }
