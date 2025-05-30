@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Test Trigger') {
       steps {
-        echo 'Triggered by polling GitHub repo!webhook is integrated successfully....kindly proceed for ansible'
+        echo 'Triggered by polling GitHub repo!webhook is integrated successfully....kindly proceed for ansible and k8'
       }
     }
   }
