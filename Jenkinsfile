@@ -41,6 +41,14 @@ pipeline {
         '''
       }
     }
+    stage('Ansible Deploy') {
+      steps {
+       sh '''
+        echo "🚀 Running Ansible playbook to build & push Docker images..."
+        ssh -i $SSH_KEY $ANSIBLE_USER@$ANSIBLE_IP "ansible-playbook $REMOTE_PATH/ansible/playbook.yml"
+      '''
+      }
+    }
 
   }
 }
