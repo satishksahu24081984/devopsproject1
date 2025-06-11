@@ -5,7 +5,7 @@
   tasks:
     - name: Build Backend Docker Image
       community.docker.docker_image:
-        name: your-dockerhub-user/backend
+        name: sanjeevy/backend
         build:
           path: /root/cicdk8/
           dockerfile: Dockerfile.backend
@@ -15,7 +15,7 @@
 
     - name: Build Frontend Docker Image
       community.docker.docker_image:
-        name: your-dockerhub-user/frontend
+        name: sanjeevy/frontend
         build:
           path: /root/cicdk8/
           dockerfile: Dockerfile.frontend
