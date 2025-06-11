@@ -1,3 +1,2 @@
-mechanicalsoup
-beautifulsoup
-pymysql
+mechanicalsoup==1.3.0
+PyMySQL==1.1.0
