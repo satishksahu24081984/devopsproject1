@@ -92,7 +92,6 @@ def store_to_db(tender_data):
 
         conn.commit()
         print("\n✅ Tender data stored successfully in database.")
-        print("\n✅ Tender data stored succes.")
 
     except Exception as e:
         print(f"\n❌ Database error: {e}")
