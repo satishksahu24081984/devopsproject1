@@ -27,7 +27,7 @@
   tasks:
     - name: Copy YAML files to /home/ubuntu/
       copy:
-        src: ~/cicdk8/k8s/
+        src: /root/cicdk8/k8s/
         dest: /home/ubuntu/k8s/
         mode: '0644'
 
