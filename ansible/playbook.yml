@@ -22,4 +22,21 @@
         tag: latest
         push: true
         source: build
+- name: Copy YAML files to K8s EC2 Node
+  hosts: k8s
+  tasks:
+    - name: Copy YAML files to /home/ubuntu/
+      copy:
+        src: ~/cicdk8/k8s/
+        dest: /home/ubuntu/k8s/
+        mode: '0644'
 
+- name: Apply Kubernetes Deployments from Ansible
+  hosts: k8s
+  become: yes
+  tasks:
+    - name: Apply backend deployment
+      shell: kubectl apply -f /home/ubuntu/k8s/backend-deployment.yml
+
+    - name: Apply frontend deployment
+      shell: kubectl apply -f /home/ubuntu/k8s/frontend-deployment.yml

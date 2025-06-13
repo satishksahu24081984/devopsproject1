@@ -1,10 +1,10 @@
- "import mechanicalsoup
+import mechanicalsoup
 import re
 import pymysql
 
 # --- DB CONFIGURATION (update with your credentials) ---
 db_config = {
-    'host': 'tenderwin-db.crgu4268iiuy.ap-southeast-1.rds.amazonaws.com',
+    'host': 'cicdrdsdb.cjgiuuuoiuzk.ap-south-1.rds.amazonaws.com',
     'user': 'admin',
     'password': 'password123',
     'database': 'dbtenders'
@@ -110,4 +110,4 @@ if __name__ == "__main__":
     tender_data = get_tender_data()
     if tender_data:
         print_clean_table(tender_data)
-        store_to_db(tender_data)"
+        store_to_db(tender_data)

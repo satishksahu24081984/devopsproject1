@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: your-dockerhub-user/frontend:latest
+        image: sanjeevy/frontend:latest
         ports:
         - containerPort: 3000
 ---
