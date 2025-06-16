@@ -27,16 +27,17 @@
   tasks:
     - name: Copy YAML files to /home/ubuntu/
       copy:
-        src: /root/cicdk8/k8s/
+        src: /root/cicdk8/k8/
         dest: /home/ubuntu/k8s/
         mode: '0644'
+        remote_src: no
 
-- name: Apply Kubernetes Deployments from Ansible
-  hosts: k8s
-  become: yes
-  tasks:
-    - name: Apply backend deployment
-      shell: kubectl apply -f /home/ubuntu/k8s/backend-deployment.yml
+#- name: Apply Kubernetes Deployments from Ansible
+#  hosts: k8s
+#  become: yes
+#  tasks:
+#    - name: Apply backend deployment
+#      shell: kubectl apply -f /home/ubuntu/k8s/backend-deployment.yml
 
-    - name: Apply frontend deployment
-      shell: kubectl apply -f /home/ubuntu/k8s/frontend-deployment.yml
+#    - name: Apply frontend deployment
+#      shell: kubectl apply -f /home/ubuntu/k8s/frontend-deployment.yml
