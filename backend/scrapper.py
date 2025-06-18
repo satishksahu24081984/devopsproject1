@@ -1,10 +1,9 @@
 import mechanicalsoup
 import re
 import pymysql
-
-# --- DB CONFIGURATION (update with your credentials) ---
 import os
 
+# --- DB CONFIGURATION ---
 db_config = {
     'host': os.getenv('DB_HOST'),
     'user': os.getenv('DB_USER'),
@@ -22,7 +21,7 @@ def clean_label(label):
 def clean_value(value):
     return value.strip().replace('\n', ' ').replace('\r', '').replace('|', '').strip()
 
-# --- Mappings to DB table fields ---
+# --- DB field mapping ---
 DB_FIELDS = {
     'tender_id': 'tender_id',
     'work_description': 'work_description',
@@ -32,17 +31,16 @@ DB_FIELDS = {
 def get_tender_data():
     browser = mechanicalsoup.StatefulBrowser()
 
-    # Step 1: Get tender list page
-    print("🔍 Launching browser and opening homepage...")
-    browser.open("https://mahatenders.gov.in/nicgep/app?page=Home&service=page")
-    print("✅ Homepage opened. Navigating directly to organisation tenders...")
-    detail_url = "https://mahatenders.gov.in/nicgep/app?component=%24DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T&sp=SHZZjrmmzbnr9k5AksX9MldS0Fec7wUuNy1YFXyqSerE%3D"
-    browser.open(detail_url)
-    print(browser.get_current_page())
+    print("🚀 Running scrapper.py...")
 
+    # ✅ Step 1: Skip homepage, go directly to working link
+    print("🔍 Opening tender organisation page directly...")
+    url = "https://mahatenders.gov.in/nicgep/app?component=%24DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T&sp=SHZZjrmmzbnr9k5AksX9MldS0Fec7wUuNy1YFXyqSerE%3D"
+    browser.open(url)
     page = browser.get_current_page()
-    table_rows = page.find_all("tr", id=lambda x: x and x.startswith("informal_"))
 
+    # ✅ Step 2: Extract tender links
+    table_rows = page.find_all("tr", id=lambda x: x and x.startswith("informal_"))
     tender_links = []
     for row in table_rows:
         cols = row.find_all("td")
@@ -53,16 +51,17 @@ def get_tender_data():
                 tender_links.append(href)
 
     if not tender_links:
-        print("No tenders found.")
+        print("❌ No tenders found.")
         return None
 
-    # Step 2: Open first tender detail page
+    print(f"📦 Found {len(tender_links)} tender(s), opening first...")
+
+    # ✅ Step 3: Open first tender detail page
     browser.open(tender_links[0])
     tender_page = browser.get_current_page()
 
-    # Step 3: Extract all .tablebg tables
+    # ✅ Step 4: Extract tables with class="tablebg"
     tables = tender_page.find_all("table", class_="tablebg")
-
     tender_data = {}
 
     for table in tables:
@@ -77,7 +76,6 @@ def get_tender_data():
     return tender_data
 
 def store_to_db(tender_data):
-    # Extract only relevant fields
     db_values = {
         db_field: tender_data.get(scraped_field, '') for scraped_field, db_field in DB_FIELDS.items()
     }
@@ -111,7 +109,7 @@ def print_clean_table(data_dict):
     for k in sorted(data_dict):
         print(f"{k.ljust(max_width)} : {data_dict[k]}")
 
-# ---  Main execution ---
+# --- Main Execution ---
 if __name__ == "__main__":
     tender_data = get_tender_data()
     if tender_data:
