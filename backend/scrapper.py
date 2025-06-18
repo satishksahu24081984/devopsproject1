@@ -3,11 +3,14 @@ import re
 import pymysql
 
 # --- DB CONFIGURATION (update with your credentials) ---
+import os
+
 db_config = {
-    'host': 'cicdrdsdb.cjgiuuuoiuzk.ap-south-1.rds.amazonaws.com',
-    'user': 'admin',
-    'password': 'password123',
-    'database': 'dbtenders'
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'port': int(os.getenv('DB_PORT', 3306))
 }
 
 # --- Field mapping to clean field names ---
@@ -30,8 +33,10 @@ def get_tender_data():
     browser = mechanicalsoup.StatefulBrowser()
 
     # Step 1: Get tender list page
+    print("🔍 Launching browser and opening homepage...")
     browser.open("https://mahatenders.gov.in/nicgep/app?page=Home&service=page")
-    detail_url = "https://mahatenders.gov.in/nicgep/app?component=%24DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T&sp=Sdtz14ez7ZUEvqftoWmZMMNS0Fec7wUuNy1YFXyqSerE%3D"
+    print("✅ Homepage opened. Navigating directly to organisation tenders...")
+    detail_url = "https://mahatenders.gov.in/nicgep/app?component=%24DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T&sp=SHZZjrmmzbnr9k5AksX9MldS0Fec7wUuNy1YFXyqSerE%3D"
     browser.open(detail_url)
     print(browser.get_current_page())
 

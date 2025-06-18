@@ -1,17 +1,17 @@
 # Dockerfile.backend
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install required system dependencies
-RUN apt-get update && apt-get install -y gcc libmariadb-dev && apt-get clean
+COPY scrapper.py requirements.txt ./
 
-# Install Python dependencies
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y gcc libmariadb-dev && apt-get clean \
+    && pip install --no-cache-dir -r requirements.txt
 
-# Copy your app code
-COPY backend/ .
+ENV DB_HOST=cicdrdsdb.cjgiuuuoiuzk.ap-south-1.rds.amazonaws.com \
+    DB_USER=admin \
+    DB_PASSWORD=password123 \
+    DB_NAME=dbtenders \
+    DB_PORT=3306
 
-CMD ["python", "scrapper.py"]
-
+CMD ["python3", "scrapper.py"]
