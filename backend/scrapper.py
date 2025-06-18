@@ -31,8 +31,9 @@ def get_tender_data():
 
     # Step 1: Get tender list page
     browser.open("https://mahatenders.gov.in/nicgep/app?page=Home&service=page")
-    detail_url = "https://mahatenders.gov.in/nicgep/app?component=$DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T&sp=SPlatpmyLLXrabRDSB3Mvxg=="
+    detail_url = "https://mahatenders.gov.in/nicgep/app?component=%24DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T&sp=Sdtz14ez7ZUEvqftoWmZMMNS0Fec7wUuNy1YFXyqSerE%3D"
     browser.open(detail_url)
+    print(browser.get_current_page())
 
     page = browser.get_current_page()
     table_rows = page.find_all("tr", id=lambda x: x and x.startswith("informal_"))
