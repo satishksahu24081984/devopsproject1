@@ -12,6 +12,7 @@ db_config = {
     'port': int(os.getenv('DB_PORT', 3306))
 }
 
+# --- Field mapping ---
 def clean_label(label):
     label = label.lower().strip()
     label = re.sub(r'[^a-z0-9 ]+', '', label)
@@ -28,21 +29,28 @@ DB_FIELDS = {
 
 def get_tender_data():
     browser = mechanicalsoup.StatefulBrowser()
-
     print("🚀 Running scrapper.py...")
-    print("🔍 Opening homepage...")
-    homepage = "https://mahatenders.gov.in/nicgep/app"
-    browser.open(homepage)
-    print("✅ Successfully opened:", homepage)
+    print("home page a=pe jao")
 
-    print("🔍 Opening organisation-wise tender page...")
-    url = ("https://mahatenders.gov.in/nicgep/app?"
-           "component=%24DirectLink&page=FrontEndTendersByOrganisation&service=direct&session=T"
-           "&sp=S9Yc8JXKsADB9kYeLUPRdONS0Fec7wUuNy1YFXyqSerE%3D")
-    browser.open(url)
+    # ✅ Step 1: Open homepage to initialize session
+    home_url = "https://mahatenders.gov.in/nicgep/app"
+    print(f"🔍 Opening homepage: {home_url}")
+    print("home page aa gya hai")
+    browser.open(home_url)
+    print("✅ Homepage opened.")
+
+    # ✅ Step 2: Find and click the "Tenders by Organisation" link
+    try:
+        browser.follow_link(text="Tenders by Organisation")
+        print("tender by organisation par jana hai")
+        print("✅ Navigated to 'Tenders by Organisation' page.")
+    except mechanicalsoup.utils.LinkNotFoundError:
+        print("❌ Could not find 'Tenders by Organisation' link. Exiting.")
+        return None
+
     page = browser.get_current_page()
-    print("✅ Successfully opened:", url)
 
+    # ✅ Step 3: Extract tender links
     table_rows = page.find_all("tr", id=lambda x: x and x.startswith("informal_"))
     tender_links = []
     for row in table_rows:
@@ -59,9 +67,11 @@ def get_tender_data():
 
     print(f"📦 Found {len(tender_links)} tender(s), opening first...")
 
+    # ✅ Step 4: Open first tender detail page
     browser.open(tender_links[0])
     tender_page = browser.get_current_page()
 
+    # ✅ Step 5: Extract tender data
     tables = tender_page.find_all("table", class_="tablebg")
     tender_data = {}
 
@@ -84,6 +94,7 @@ def store_to_db(tender_data):
     try:
         conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
+
         query = """
             INSERT INTO mytender (tender_id, work_description, tender_organisation)
             VALUES (%s, %s, %s)
@@ -93,8 +104,10 @@ def store_to_db(tender_data):
             db_values['work_description'],
             db_values['tender_organisation']
         ))
+
         conn.commit()
         print("\n✅ Tender data stored successfully in database.")
+
     except Exception as e:
         print(f"\n❌ Database error: {e}")
     finally:
@@ -107,6 +120,7 @@ def print_clean_table(data_dict):
     for k in sorted(data_dict):
         print(f"{k.ljust(max_width)} : {data_dict[k]}")
 
+# --- Main Execution ---
 if __name__ == "__main__":
     tender_data = get_tender_data()
     if tender_data:
