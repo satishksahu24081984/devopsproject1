@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tender-scrapper-job
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: init-scrapper
+          image: sanjeevy/backend:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              echo "📦 Initializing environment..."
+              pip install -r /app/requirements.txt
+              echo "✅ Dependencies installed. Testing DB connection..."
+              python3 -c "import pymysql; conn = pymysql.connect(host='cicdrdsdb.cjgiuuuoiuzk.ap-south-1.rds.amazonaws.com', user='admin', password='password123', database='dbtenders', port=3306); conn.close(); print('✅ DB connected successfully.')"
+              echo "✅ Init container completed."
+      containers:
+        - name: scrapper
+          image: sanjeevy/backend:latest
+          env:
+            - name: DB_HOST
+              value: "cicdrdsdb.cjgiuuuoiuzk.ap-south-1.rds.amazonaws.com"
+            - name: DB_USER
+              value: "admin"
+            - name: DB_PASSWORD
+              value: "password123"
+            - name: DB_NAME
+              value: "dbtenders"
+            - name: DB_PORT
+              value: "3306"
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              echo "Running scrapper.py..."
+              python3 /app/scrapper.py
+              echo "Sleeping 10 mins for debug..."
+              sleep 600
+      restartPolicy: Never
