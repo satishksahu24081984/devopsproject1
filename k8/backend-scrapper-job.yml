@@ -36,5 +36,5 @@ spec:
               echo "Running scrapper.py..."
               python3 /app/scrapper.py
               echo "Sleeping 10 mins for debug..."
-              sleep 600
+              sleep 1800
       restartPolicy: Never

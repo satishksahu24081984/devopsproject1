@@ -12,7 +12,15 @@
         tag: latest
         push: true
         source: build
-
+    - name: Build API Docker Image (Flask + Nginx)
+      community.docker.docker_image:
+        name: sanjeevy/api-backend
+        build:
+          path: /root/cicdk8/
+          dockerfile: Dockerfile.api
+        tag: latest
+        push: true
+        source: build
     - name: Build Frontend Docker Image
       community.docker.docker_image:
         name: sanjeevy/frontend
