@@ -107,7 +107,7 @@ def main():
                 tender_links.append(href)
 
     if not tender_links:
-        print("❌ No tender links found.")
+        print("❌ No tender links found.Please check website url")
         return
 
     # Step 2: Print only the first link

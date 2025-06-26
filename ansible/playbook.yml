@@ -5,7 +5,7 @@
   tasks:
     - name: Build Backend Docker Image
       community.docker.docker_image:
-        name: sanjeevy/backend
+        name: sanjeevy/code-backend
         build:
           path: /root/cicdk8/
           dockerfile: Dockerfile.backend

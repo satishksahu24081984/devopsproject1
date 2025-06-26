@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y nginx gcc libmariadb-dev && apt-get cle
     pip install --no-cache-dir -r requirements.txt
 
 # Replace Nginx default config
-COPY default /etc/nginx/sites-available/default
+COPY ./default /etc/nginx/sites-available/default
 
 # Gunicorn WSGI for Flask
 RUN pip install gunicorn
@@ -20,4 +20,4 @@ RUN pip install gunicorn
 EXPOSE 80
 
 # Start Gunicorn and Nginx
-CMD bash -c "gunicorn -w 3 -b 127.0.0.1:5000 api:app & nginx -g 'daemon off;'"
+CMD bash -c "gunicorn -w 3 -b 0.0.0.0:5000 api:app & nginx -g 'daemon off;'"
