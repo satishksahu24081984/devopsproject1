@@ -1,23 +1,29 @@
 # Dockerfile.api
 FROM python:3.10-slim
 
+# Set working directory
 WORKDIR /app
 
-# Copy Flask API and requirements
+# Copy Flask app and requirements
 COPY backend/api.py backend/requirements.txt ./
 
+# Install system dependencies including nginx and curl
+RUN apt-get update && apt-get install -y nginx gcc libmariadb-dev curl vim && apt-get clean
+
 # Install Python dependencies
-RUN apt-get update && apt-get install -y nginx gcc libmariadb-dev && apt-get clean && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Replace Nginx default config
-COPY ./default /etc/nginx/sites-available/default
-
-# Gunicorn WSGI for Flask
+# Install Gunicorn
 RUN pip install gunicorn
 
-# Expose port
+# Replace Nginx default config with our custom one
+COPY ./default /etc/nginx/sites-available/default
+
+# Enable Nginx site config (just to ensure symlink exists if needed)
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# Expose HTTP port
 EXPOSE 80
 
-# Start Gunicorn and Nginx
-CMD bash -c "gunicorn -w 3 -b 0.0.0.0:5000 api:app & nginx -g 'daemon off;'"
+# Run both Gunicorn (Flask) and Nginx
+CMD bash -c "gunicorn -w 3 -b 127.0.0.1:5000 api:app & nginx -g 'daemon off;'"

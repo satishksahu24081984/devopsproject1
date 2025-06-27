@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY backend/scrapper.py backend/requirements.txt ./
 
-RUN apt-get update && apt-get install -y gcc libmariadb-dev && apt-get clean \
+RUN apt-get update && apt-get install -y gcc libmariadb-dev vim && apt-get clean \
     && pip install --no-cache-dir -r requirements.txt
 
 ENV DB_HOST=cicdrdsdb.cjgiuuuoiuzk.ap-south-1.rds.amazonaws.com \

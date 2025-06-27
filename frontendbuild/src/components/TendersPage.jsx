@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+
 const TendersPage = () => {
+  const BASE_URL= import.meta.env.VITE_API_BASE_URL;
+  // console.log("base",BASE_URL);
+  
   const [tenders, setTenders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -14,7 +18,7 @@ const TendersPage = () => {
     const fetchTenders = async () => {
       try {
         setLoading(true);
-        const response = await axios.post("http://13.213.35.77/post-page", {
+        const response = await axios.post(`${BASE_URL}/post-page`, {
           page: currentPage,
           limit: itemsPerPage,
         });
