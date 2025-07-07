@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y nginx gcc libmariadb-dev curl vim && ap
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Gunicorn
-RUN pip install gunicorn
+RUN pip install Gunicorn
 
 # Replace Nginx default config with our custom one
 COPY ./default /etc/nginx/sites-available/default
@@ -27,3 +27,4 @@ EXPOSE 80
 
 # Run both Gunicorn (Flask) and Nginx
 CMD bash -c "gunicorn -w 3 -b 127.0.0.1:5000 api:app & nginx -g 'daemon off;'"
+

@@ -150,8 +150,8 @@ const TendersPage = () => {
                       : "-"}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                    {tender.work_Description !== "N/A"
-                      ? tender.work_Description
+                    {tender.work_description !== "N/A"
+                      ? tender.work_description
                       : "-"}
                   </td>
                 </tr>
