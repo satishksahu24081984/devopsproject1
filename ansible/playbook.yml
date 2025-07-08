@@ -5,7 +5,7 @@
   tasks:
     - name: Build Backend Docker Image
       community.docker.docker_image:
-        name: sanjeevy/code-backend
+        name: sanjeevy/code-backend1
         build:
           path: /root/cicdk8/
           dockerfile: Dockerfile.backend
@@ -14,7 +14,7 @@
         source: build
     - name: Build API Docker Image (Flask + Nginx)
       community.docker.docker_image:
-        name: sanjeevy/api-backend
+        name: sanjeevy/api-backend1
         build:
           path: /root/cicdk8/
           dockerfile: Dockerfile.api
@@ -23,7 +23,7 @@
         source: build
     - name: Build Frontend Docker Image
       community.docker.docker_image:
-        name: sanjeevy/frontend
+        name: sanjeevy/frontend1
         build:
           path: /root/cicdk8/
           dockerfile: Dockerfile.frontend
