@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-
 const TendersPage = () => {
-  const BASE_URL= import.meta.env.VITE_API_BASE_URL;
-  console.log("base",BASE_URL);
-  
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   const [tenders, setTenders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -14,35 +12,42 @@ const TendersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-useEffect(() => {
-  const fetchTenders = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post(`${BASE_URL}/post-page`, {
-        page: currentPage,
-        limit: itemsPerPage,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials: false,
-      });
+  useEffect(() => {
+    const fetchTenders = async () => {
+      try {
+        setLoading(true);
 
-      setTenders(response.data.tenders);
-      setTotalPages(response.data.total_pages);
-      setTotalEntries(response.data.total_entries);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
+        // ✅ Smart handling for dev and production environments
+        const apiUrl = import.meta.env.DEV
+          ? '/api/post-page' // hits vite proxy during development
+          : `${BASE_URL}/post-page`; // uses full URL in production
 
-  fetchTenders();
-}, [currentPage, itemsPerPage]);
+        const response = await axios.post(
+          apiUrl,
+          {
+            page: currentPage,
+            limit: itemsPerPage,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            withCredentials: false,
+          }
+        );
+
+        setTenders(response.data.tenders);
+        setTotalPages(response.data.total_pages);
+        setTotalEntries(response.data.total_entries);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
 
     fetchTenders();
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage]); // ✅ Correct dependency list
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -53,7 +58,7 @@ useEffect(() => {
   const handleItemsPerPageChange = (e) => {
     const newItemsPerPage = parseInt(e.target.value);
     setItemsPerPage(newItemsPerPage);
-    setCurrentPage(1); // Reset to first page when items per page changes
+    setCurrentPage(1);
   };
 
   if (loading) {
@@ -299,5 +304,4 @@ useEffect(() => {
     </div>
   );
 };
-
 export default TendersPage;
