@@ -5,18 +5,17 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
-    # Serve static files + handle React router paths
+    # React routing support
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri /index.html;
     }
 
-    # Optional: Add CORS headers for static assets
+    # Serve static assets with proper CORS
     location ~* \.(js|css|json|png|jpg|jpeg|gif|ico|woff2?)$ {
         add_header 'Access-Control-Allow-Origin' '*';
         access_log off;
     }
 
-    # Optional: favicon.ico fix
     location = /favicon.ico {
         log_not_found off;
         access_log off;
