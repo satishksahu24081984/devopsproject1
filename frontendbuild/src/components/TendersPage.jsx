@@ -4,7 +4,7 @@ import axios from "axios";
 
 const TendersPage = () => {
   const BASE_URL= import.meta.env.VITE_API_BASE_URL;
-  // console.log("base",BASE_URL);
+  console.log("base",BASE_URL);
   
   const [tenders, setTenders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,24 +14,32 @@ const TendersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchTenders = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.post(`${BASE_URL}/post-page`, {
-          page: currentPage,
-          limit: itemsPerPage,
-        });
+useEffect(() => {
+  const fetchTenders = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`${BASE_URL}/post-page`, {
+        page: currentPage,
+        limit: itemsPerPage,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: false,
+      });
 
-        setTenders(response.data.tenders);
-        setTotalPages(response.data.total_pages);
-        setTotalEntries(response.data.total_entries);
-        setLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
+      setTenders(response.data.tenders);
+      setTotalPages(response.data.total_pages);
+      setTotalEntries(response.data.total_entries);
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  fetchTenders();
+}, [currentPage, itemsPerPage]);
 
     fetchTenders();
   }, [currentPage, itemsPerPage]);

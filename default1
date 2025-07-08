@@ -1,31 +1,24 @@
 server {
     listen 80;
-    server_name 13.232.208.79;
+    server_name 13.235.244.194;
 
     root /usr/share/nginx/html;
     index index.html;
 
-    # Serve static files and route others to index.html (SPA)
+    # Serve static files + handle React router paths
     location / {
         try_files $uri $uri/ /index.html;
     }
 
-    # Allow CORS for all static files if needed (JS, CSS, etc.)
+    # Optional: Add CORS headers for static assets
     location ~* \.(js|css|json|png|jpg|jpeg|gif|ico|woff2?)$ {
         add_header 'Access-Control-Allow-Origin' '*';
+        access_log off;
     }
 
-    # CORS + Preflight support (if needed for proxying API calls directly from NGINX)
-    if ($request_method = OPTIONS) {
-        add_header 'Access-Control-Allow-Origin' "$http_origin" always;
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
-        add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Origin,Accept' always;
-        add_header 'Content-Length' 0;
-        add_header 'Content-Type' 'text/plain charset=UTF-8';
-        return 204;
+    # Optional: favicon.ico fix
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
     }
-
-    add_header 'Access-Control-Allow-Origin' "$http_origin" always;
-    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
-    add_header 'Access-Control-Allow-Headers' 'Authorization,Content-Type,Origin,Accept' always;
 }

@@ -4,8 +4,7 @@ from flask_cors import CORS
 import pymysql
 
 app = Flask(__name__)
-CORS(app)
-
+CORS(app, origins="*", supports_credentials=True)
 # --- Database Configuration ---
 
 db_config = {
