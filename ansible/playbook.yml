@@ -1,5 +1,5 @@
 ---
-- name: Build and Push Docker Images
+- name: Build and Push Docker Images and then run this playbook
   hosts: localhost
   become: yes
   tasks:
