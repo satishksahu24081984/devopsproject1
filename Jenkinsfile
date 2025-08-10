@@ -2,13 +2,13 @@ pipeline {
   agent any
 
   triggers {
-    pollSCM('* * * * *')  // 🔄 Triggers the pipeline every 1 minute if there's a code change in GitHub
+    pollSCM('* * * * *')  // 🔄 Triggers the pipeline if there's a code change in GitHub
   }
 
   environment {
-          // ✅ Jenkins private SSH key path (to connect to Ansible server)
+    SSH_KEY = '/var/lib/jenkins/.ssh/id_rsa'       // ✅ Jenkins private SSH key path (to connect to Ansible server)
     ANSIBLE_USER = 'root'                          // 👤 Username for Ansible server login
-    ANSIBLE_IP = '13.201.52.184'                    // 🌐 Ansible server's public IP
+    ANSIBLE_IP = '13.235.133.158'                    // 🌐 Ansible server's public IP
     REMOTE_PATH = '/root/cicdk8'                 // 📁 Folder in Ansible server to copy code into
   }
 
@@ -41,14 +41,14 @@ pipeline {
         '''
       }
     }
-    stage('Ansible Deploy') {
-      steps {
-       sh '''
-        echo "🚀 Running Ansible playbook to build & push Docker images..."
-        ssh -i $SSH_KEY $ANSIBLE_USER@$ANSIBLE_IP "ansible-playbook $REMOTE_PATH/ansible/playbook.yml"
-      '''
-      }
+    // stage('Ansible Deploy') {
+    //   steps {
+    //    sh '''
+    //     echo "🚀 Running Ansible playbook to build & push Docker images..."
+    //     ssh -i $SSH_KEY $ANSIBLE_USER@$ANSIBLE_IP "ansible-playbook $REMOTE_PATH/ansible/playbook.yml"
+    //   '''
+    //   }
     }
 
-  }
 }
+
